@@ -12,7 +12,7 @@ services:
     - "5005:5005"
     networks:
       - sco-network
-    depends_on:
+    external_links:
       - mongodb
       - elasticsearch
   mongodb:
@@ -22,8 +22,8 @@ services:
 #      MONGODB_APPLICATION_DATABASE: app1
 #      MONGO_INITDB_ROOT_USERNAME: root
 #      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-    - "27017:27017"
+#    ports:
+#    - "27017:27017"
     volumes:
     - /home/sergio/workspace/infra/volumes/docker/sco:/data/db
     networks:
@@ -31,9 +31,9 @@ services:
   elasticsearch:
     image: elasticsearch:6.8.6
     container_name: "elasticsearch"
-    ports:
-    - "9200:9200"
-    - "9300:9300"
+#    ports:
+#    - "9200:9200"
+#    - "9300:9300"
 #    volumes:
 #    - /home/sergio/workspace/infra/volumes/docker/sco/esdata:/usr/share/elasticsearch/data
     environment:
