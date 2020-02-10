@@ -1,12 +1,11 @@
 version: '3'
 services:
   web:
-    build: .
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/app1
-#    command: ["java", "-jar", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "app.jar"]
-#    volumes:
-#      - ./target/sco-0.0.1-SNAPSHOT.jar:/app.jar
+    image: openjdk:8-jdk-alpine
+    command: ["java", "-jar", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "app.jar"]
+    volumes:
+      - ./target/sco-0.0.1-SNAPSHOT.jar:/app.jar
+      - /home/sergio/Downloads/files/v1:/bck/v1
     ports:
     - "8080:8080"
     - "5005:5005"
@@ -18,12 +17,6 @@ services:
   mongodb:
     container_name: "mongodb"
     image: mongo
-#    environment:
-#      MONGODB_APPLICATION_DATABASE: app1
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
-#    ports:
-#    - "27017:27017"
     volumes:
     - /home/sergio/workspace/infra/volumes/docker/sco:/data/db
     networks:
@@ -31,13 +24,9 @@ services:
   elasticsearch:
     image: elasticsearch:6.8.6
     container_name: "elasticsearch"
-#    ports:
-#    - "9200:9200"
-#    - "9300:9300"
-#    volumes:
-#    - /home/sergio/workspace/infra/volumes/docker/sco/esdata:/usr/share/elasticsearch/data
+    volumes:
+    - /home/sergio/workspace/infra/volumes/docker/sco/esdata:/usr/share/elasticsearch/data
     environment:
-#    - node.name=es01
     - discovery.type=single-node
     - XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED=false
     - cluster.name=es-docker-cluster
@@ -45,20 +34,20 @@ services:
     - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     networks:
       - sco-network
-  kibana:
-    image: kibana:6.8.6
-    container_name: "kibana"
-    ports:
-    - "5601:5601"
-    environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - XPACK_MONITORING_ENABLED=false
-      - XPACK_REPORTING_ENABLED=false
-      - XPACK_SECURITY_ENABLED=false
-    networks:
-      - sco-network
-    depends_on:
-      - elasticsearch
+#  kibana:
+#    image: kibana:6.8.6
+#    container_name: "kibana"
+#    ports:
+#    - "5601:5601"
+#    environment:
+#      - ELASTICSEARCH_URL=http://elasticsearch:9200
+#      - XPACK_MONITORING_ENABLED=false
+#      - XPACK_REPORTING_ENABLED=false
+#      - XPACK_SECURITY_ENABLED=false
+#    networks:
+#      - sco-network
+#    depends_on:
+#      - elasticsearch
 networks:
   sco-network:
     driver: bridge
